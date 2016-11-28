@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@mipmap/bg_room_red"></item>
+    <item>
+        <inset
+            android:insetLeft="-10px"
+            android:insetRight="-10px">
+            <shape xmlns:android="http://schemas.android.com/apk/res/android">
+                <stroke
+                    android:width="1px"
+                    android:color="#E7E7E7" />
+            </shape>
+        </inset>
+    </item>
+
+</layer-list>

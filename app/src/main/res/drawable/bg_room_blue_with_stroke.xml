@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@mipmap/bg_room_blue_middle" />
+    <item
+        android:left="-1px"
+        android:right="-1px">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android">
+            <stroke
+                android:width="1px"
+                android:color="#E7E7E7" />
+        </shape>
+    </item>
+
+</layer-list>
+
