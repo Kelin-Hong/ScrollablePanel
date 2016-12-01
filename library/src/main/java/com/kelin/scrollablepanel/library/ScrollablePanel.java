@@ -118,7 +118,7 @@ public class ScrollablePanel extends FrameLayout {
         public PanelLineAdapter(PanelAdapter panelAdapter, PinFirstItemRecyclerView headerRecyclerView) {
             this.panelAdapter = panelAdapter;
             this.headerRecyclerView = headerRecyclerView;
-            observerList.add(headerRecyclerView);
+            initRecyclerView(headerRecyclerView);
             setUpHeaderRecyclerView();
 
         }

@@ -14,7 +14,7 @@ Apk Download:[ScrollablePanelDemo.apk](art/ScrollablePanelDemo.apk)
 ## Download ##
 
 ```groovy
-  compile 'com.kelin.scrollablepanel:library:1.0.0' 
+  compile 'com.kelin.scrollablepanel:library:1.0.1' 
 ```
 
 ## Usage ##
