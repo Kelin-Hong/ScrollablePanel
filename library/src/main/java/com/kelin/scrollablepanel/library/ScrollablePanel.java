@@ -97,7 +97,7 @@ public class ScrollablePanel extends FrameLayout {
 
         @Override
         public int getItemCount() {
-            return panelAdapter.getColumnCount();
+            return panelAdapter.getColumnCount() + 1;
         }
 
         public void setRow(int row) {
@@ -136,7 +136,7 @@ public class ScrollablePanel extends FrameLayout {
 
         @Override
         public int getItemCount() {
-            return panelAdapter.getRowCount() - 1;
+            return panelAdapter.getRowCount();
         }
 
         @Override
