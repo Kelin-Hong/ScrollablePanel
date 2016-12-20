@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -169,15 +170,31 @@ public class ScrollablePanel extends FrameLayout {
 
         public void initRecyclerView(RecyclerView recyclerView) {
             observerList.add(recyclerView);
+            recyclerView.setOnTouchListener(new OnTouchListener()
+			{
+				@Override
+				public boolean onTouch(View view, MotionEvent motionEvent)
+				{
+					switch (motionEvent.getAction())
+					{
+						case MotionEvent.ACTION_DOWN:
+						case MotionEvent.ACTION_POINTER_DOWN:
+							for (RecyclerView rv : observerList)
+							{
+								rv.stopScroll();
+							}
+					}
+					
+					return false;
+				}
+			});
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 int state;
 
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
-                    if (state == RecyclerView.SCROLL_STATE_IDLE) {
-                        return;
-                    }
+                    
                     LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                     int firstPos = linearLayoutManager.findFirstVisibleItemPosition();
                     View firstVisibleItem = linearLayoutManager.getChildAt(0);
