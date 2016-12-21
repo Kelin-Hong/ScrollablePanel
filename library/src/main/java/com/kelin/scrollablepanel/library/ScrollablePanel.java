@@ -18,9 +18,10 @@ import java.util.HashSet;
  */
 public class ScrollablePanel extends FrameLayout {
     protected RecyclerView recyclerView;
-    protected PinFirstItemRecyclerView headerRecyclerView;
+    protected RecyclerView headerRecyclerView;
     protected PanelLineAdapter panelLineAdapter;
     protected PanelAdapter panelAdapter;
+    protected FrameLayout firstItemView;
 
     public ScrollablePanel(Context context, PanelAdapter panelAdapter) {
         super(context);
@@ -42,12 +43,20 @@ public class ScrollablePanel extends FrameLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.view_scrollable_panel, this, true);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_content_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        headerRecyclerView = (PinFirstItemRecyclerView) findViewById(R.id.recycler_header_list);
+        firstItemView = (FrameLayout) findViewById(R.id.first_item);
+        headerRecyclerView = (RecyclerView) findViewById(R.id.recycler_header_list);
         headerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         if (panelAdapter != null) {
             panelLineAdapter = new PanelLineAdapter(panelAdapter, headerRecyclerView);
             recyclerView.setAdapter(panelLineAdapter);
+            setUpFirstItemView(panelAdapter);
         }
+    }
+
+    private void setUpFirstItemView(PanelAdapter panelAdapter) {
+        RecyclerView.ViewHolder viewHolder = panelAdapter.onCreateViewHolder(firstItemView, panelAdapter.getItemViewType(0, 0));
+        panelAdapter.onBindViewHolder(viewHolder, 0, 0);
+        firstItemView.addView(viewHolder.itemView);
     }
 
     /**
@@ -62,6 +71,7 @@ public class ScrollablePanel extends FrameLayout {
             recyclerView.setAdapter(panelLineAdapter);
         }
         this.panelAdapter = panelAdapter;
+        setUpFirstItemView(panelAdapter);
 
     }
 
@@ -86,18 +96,18 @@ public class ScrollablePanel extends FrameLayout {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            this.panelAdapter.onBindViewHolder(holder, row, position);
+            this.panelAdapter.onBindViewHolder(holder, row, position + 1);
         }
 
         @Override
         public int getItemViewType(int position) {
-            return this.panelAdapter.getItemViewType(row, position);
+            return this.panelAdapter.getItemViewType(row, position + 1);
         }
 
 
         @Override
         public int getItemCount() {
-            return panelAdapter.getColumnCount();
+            return panelAdapter.getColumnCount() - 1;
         }
 
         public void setRow(int row) {
@@ -112,11 +122,11 @@ public class ScrollablePanel extends FrameLayout {
     private static class PanelLineAdapter extends RecyclerView.Adapter<PanelLineAdapter.ViewHolder> {
 
         private PanelAdapter panelAdapter;
-        private PinFirstItemRecyclerView headerRecyclerView;
+        private RecyclerView headerRecyclerView;
         private HashSet<RecyclerView> observerList = new HashSet<>();
 
 
-        public PanelLineAdapter(PanelAdapter panelAdapter, PinFirstItemRecyclerView headerRecyclerView) {
+        public PanelLineAdapter(PanelAdapter panelAdapter, RecyclerView headerRecyclerView) {
             this.panelAdapter = panelAdapter;
             this.headerRecyclerView = headerRecyclerView;
             initRecyclerView(headerRecyclerView);
@@ -157,6 +167,14 @@ public class ScrollablePanel extends FrameLayout {
                 lineItemAdapter.setRow(position + 1);
                 lineItemAdapter.notifyDataSetChanged();
             }
+            if (holder.firstColumnItemVH == null) {
+                RecyclerView.ViewHolder viewHolder = panelAdapter.onCreateViewHolder(holder.firstColumnItemView, panelAdapter.getItemViewType(position + 1, 0));
+                holder.firstColumnItemVH = viewHolder;
+                panelAdapter.onBindViewHolder(holder.firstColumnItemVH, position + 1, 0);
+                holder.firstColumnItemView.addView(viewHolder.itemView);
+            } else {
+                panelAdapter.onBindViewHolder(holder.firstColumnItemVH, position + 1, 0);
+            }
 
         }
 
@@ -170,31 +188,25 @@ public class ScrollablePanel extends FrameLayout {
 
         public void initRecyclerView(RecyclerView recyclerView) {
             observerList.add(recyclerView);
-            recyclerView.setOnTouchListener(new OnTouchListener()
-			{
-				@Override
-				public boolean onTouch(View view, MotionEvent motionEvent)
-				{
-					switch (motionEvent.getAction())
-					{
-						case MotionEvent.ACTION_DOWN:
-						case MotionEvent.ACTION_POINTER_DOWN:
-							for (RecyclerView rv : observerList)
-							{
-								rv.stopScroll();
-							}
-					}
-					
-					return false;
-				}
-			});
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                int state;
+            recyclerView.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                        case MotionEvent.ACTION_POINTER_DOWN:
+                            for (RecyclerView rv : observerList) {
+                                rv.stopScroll();
+                            }
+                    }
 
+                    return false;
+                }
+            });
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
-                    
+
                     LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                     int firstPos = linearLayoutManager.findFirstVisibleItemPosition();
                     View firstVisibleItem = linearLayoutManager.getChildAt(0);
@@ -207,7 +219,6 @@ public class ScrollablePanel extends FrameLayout {
                                     layoutManager.scrollToPositionWithOffset(firstPos + 1, firstRight);
                                 }
                             }
-
                         }
                     }
                 }
@@ -215,17 +226,19 @@ public class ScrollablePanel extends FrameLayout {
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
-                    state = newState;
                 }
             });
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
             public RecyclerView recyclerView;
+            public FrameLayout firstColumnItemView;
+            public RecyclerView.ViewHolder firstColumnItemVH;
 
             public ViewHolder(View view) {
                 super(view);
                 this.recyclerView = (RecyclerView) view.findViewById(R.id.recycler_line_list);
+                this.firstColumnItemView = (FrameLayout) view.findViewById(R.id.first_column_item);
                 this.recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
             }
         }

@@ -28,7 +28,7 @@ public class ScrollablePanelAdapter extends PanelAdapter {
 
     @Override
     public int getRowCount() {
-        return roomInfoList.size();
+        return roomInfoList.size() + 1;
     }
 
     @Override
