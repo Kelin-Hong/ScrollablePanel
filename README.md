@@ -14,7 +14,7 @@ Apk Download:[ScrollablePanelDemo.apk](art/ScrollablePanelDemo.apk)
 ## Download ##
 
 ```groovy
-  compile 'com.kelin.scrollablepanel:library:1.1.0' 
+  compile 'com.kelin.scrollablepanel:library:1.2.0' 
 ```
 
 ## Usage ##
@@ -90,7 +90,7 @@ protected void onCreate(Bundle savedInstanceState) {
 
 -  V1.0.1 (2016-12-01) fix header scroll bug
 -  V1.1.0 (2016-12-21) fix desynchronisation between RV’s & fix dislocation of first column in every row!
-
+-  V1.2.0 (2016-12-26)  Add notifyDataSetChanged  & Fix auto reset to original position when first time scroll down!
 
 ## License
    ```

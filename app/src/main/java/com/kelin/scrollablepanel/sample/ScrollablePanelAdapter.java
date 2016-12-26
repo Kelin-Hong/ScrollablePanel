@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.kelin.scrollablepanel.library.PanelAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,9 +22,9 @@ public class ScrollablePanelAdapter extends PanelAdapter {
     private static final int DATE_TYPE = 1;
     private static final int ORDER_TYPE = 2;
 
-    private List<RoomInfo> roomInfoList;
-    private List<DateInfo> dateInfoList;
-    private List<List<OrderInfo>> ordersList;
+    private List<RoomInfo> roomInfoList=new ArrayList<>();
+    private List<DateInfo> dateInfoList = new ArrayList<>();
+    private List<List<OrderInfo>> ordersList =new ArrayList<>();
 
 
     @Override

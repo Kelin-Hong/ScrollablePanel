@@ -2,6 +2,7 @@ package com.kelin.scrollablepanel.sample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.kelin.scrollablepanel.library.ScrollablePanel;
 
@@ -20,11 +21,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ScrollablePanel scrollablePanel = (ScrollablePanel) findViewById(R.id.scrollable_panel);
-        ScrollablePanelAdapter scrollablePanelAdapter = new ScrollablePanelAdapter();
+        final ScrollablePanel scrollablePanel = (ScrollablePanel) findViewById(R.id.scrollable_panel);
+        final ScrollablePanelAdapter scrollablePanelAdapter = new ScrollablePanelAdapter();
         generateTestData(scrollablePanelAdapter);
         scrollablePanel.setPanelAdapter(scrollablePanelAdapter);
-
     }
 
     private void generateTestData(ScrollablePanelAdapter scrollablePanelAdapter) {
