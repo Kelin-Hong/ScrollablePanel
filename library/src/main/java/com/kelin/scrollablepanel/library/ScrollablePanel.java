@@ -209,6 +209,7 @@ public class ScrollablePanel extends FrameLayout {
         }
 
         public void initRecyclerView(RecyclerView recyclerView) {
+            recyclerView.setNestedScrollingEnabled(false);
             recyclerView.setHasFixedSize(true);
             LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             if (layoutManager != null && firstPos > 0 && firstOffset > 0) {
