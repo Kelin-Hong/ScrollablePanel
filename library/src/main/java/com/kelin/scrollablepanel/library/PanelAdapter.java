@@ -1,7 +1,8 @@
 package com.kelin.scrollablepanel.library;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by kelin on 16-11-18.
