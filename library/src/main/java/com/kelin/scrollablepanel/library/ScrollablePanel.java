@@ -22,6 +22,7 @@ public class ScrollablePanel extends FrameLayout {
     protected PanelLineAdapter panelLineAdapter;
     protected PanelAdapter panelAdapter;
     protected FrameLayout firstItemView;
+    protected RecyclerView.ViewHolder firstHeaderViewHolder;
 
     public ScrollablePanel(Context context, PanelAdapter panelAdapter) {
         super(context);
@@ -55,9 +56,11 @@ public class ScrollablePanel extends FrameLayout {
     }
 
     private void setUpFirstItemView(PanelAdapter panelAdapter) {
-        RecyclerView.ViewHolder viewHolder = panelAdapter.onCreateViewHolder(firstItemView, panelAdapter.getItemViewType(0, 0));
-        panelAdapter.onBindViewHolder(viewHolder, 0, 0);
-        firstItemView.addView(viewHolder.itemView);
+        if (firstHeaderViewHolder == null) {
+            firstHeaderViewHolder = panelAdapter.onCreateViewHolder(firstItemView, panelAdapter.getItemViewType(0, 0));
+            firstItemView.addView(firstHeaderViewHolder.itemView);
+        }
+        panelAdapter.onBindViewHolder(firstHeaderViewHolder, 0, 0);
     }
 
     public void notifyDataSetChanged() {
